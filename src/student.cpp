@@ -71,21 +71,70 @@ string display(Stack& s) {
 
 // SOAL 1
 bool push(Stack& s, int nilai) {
-    return false;
+    Node* newNode = new Node;  //membuat node baru di memo
+
+    if (newNode == nullptr){  //cek penuh
+        return false;
+    }
+    newNode->data = nilai; //isi data dengan nilai
+    newNode->next = s.top; //arahkan data ke top
+    s.top = newNode;
+    return true;
 }
 
 // SOAL 2
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if (isEmpty(s)){ //cek kosong
+        return false;
+    }
+    Node* temp = s.top; //arahkan temp ke top
+    nilai = temp -> data; //ambil nilainya
+    s.top = s.top -> next; //perbarui top kebawahnya
+
+    delete temp;
+    return true;
 }
 
 // SOAL 3
 void clear(Stack& s) {
+    Node* hapus; //utk menyimpan alamat node yang akan dihapus 
+
+    while (s.top != nullptr){ //cek topnya null atau tdk
+        Node* hapus = s.top;  //arahkan pointer hapus ke top
+        s.top = s.top->next;  //perbarui top kebawahnya
+
+        delete hapus;
+    }
 }
 
 // SOAL 4
 bool kurungSeimbang(const string& ekspresi) {
-    return false;
+    Stack temp;
+    inisialisasi(temp); 
+
+    for (int i = 0; i < ekspresi.length(); i++) {
+        char c = ekspresi[i];
+
+        if (c == '(' || c == '{' || c == '[') {
+            push(temp, c);
+        }
+        else if (c == ')' || c == '}' || c == ']') {
+            int teratas;
+            if (!pop(temp, teratas)) { 
+                return false;
+            }
+            if ((c == ')' && teratas != '(') ||
+                (c == '}' && teratas != '{') ||
+                (c == ']' && teratas != '[')) {
+                clear(temp); 
+                return false;
+            }
+        }
+    }
+
+    bool hasil = isEmpty(temp);
+    clear(temp);
+    return hasil;
 }
 
 // =============================================================================
